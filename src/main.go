@@ -10,13 +10,16 @@ import (
 	"time"
 )
 
+const DEFAULT_CSV_COMMA = ';'
+
 func main() {
 	startTime := time.Now()
 
-	var xmlFilePath, localitiesPathToSave string
+	var xmlFilePath, localitiesPathToSave, villagesPathToSave string
 
 	flag.StringVar(&xmlFilePath, "i", "", "[Required] Path to XML feed")
 	flag.StringVar(&localitiesPathToSave, "lo", "", "[Optional] Path for result about localities. If empty, localities will not be saved")
+	flag.StringVar(&villagesPathToSave, "vo", "", "[Optional] Path for result about villages. If empty, villages will not be saved")
 
 	flag.Parse()
 
@@ -28,6 +31,7 @@ func main() {
 	decoder := xml.NewDecoder(file)
 
 	localities := make(map[string]int)
+	villages := make(map[string]int)
 
 	offersCount := 0
 	for {
@@ -49,13 +53,30 @@ func main() {
 					localities[offer.Location.LocalityName]++
 				}
 
+				if offer.VillageName != "" {
+					if _, ok := villages[offer.VillageName]; !ok {
+						villages[offer.VillageName] = 0
+					}
+					villages[offer.VillageName]++
+				}
+
 				offersCount++
 			}
 		}
 	}
 
 	if localitiesPathToSave != "" {
-		helpers.WriteCsvLocalities(localities, localitiesPathToSave)
+		err = helpers.WriteCsvData(localities, localitiesPathToSave, DEFAULT_CSV_COMMA)
+		if err != nil {
+			helpers.CheckError("Cannot write localities", err)
+		}
+	}
+
+	if villagesPathToSave != "" {
+		err = helpers.WriteCsvData(villages, villagesPathToSave, DEFAULT_CSV_COMMA)
+		if err != nil {
+			helpers.CheckError("Cannot write villages", err)
+		}
 	}
 
 	endTime := time.Now()

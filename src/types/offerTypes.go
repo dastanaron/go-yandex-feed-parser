@@ -1,12 +1,17 @@
 package types
 
 type Offer struct {
-	InternalId   string   `xml:"internal-id,attr"`
-	Type         string   `xml:"type"`
-	PropertyType string   `xml:"property-type"`
-	Category     string   `xml:"category"`
-	Url          string   `xml:"url"`
-	Location     Location `xml:"location"`
+	InternalId      string   `xml:"internal-id,attr"`
+	Type            string   `xml:"type"`
+	PropertyType    string   `xml:"property-type"`
+	LotNumber       string   `xml:"lot-number"`
+	CadastralNumber string   `xml:"cadastral-number"`
+	Category        string   `xml:"category"`
+	Url             string   `xml:"url"`
+	CreationDate    string   `xml:"creation-date"`
+	VillageName     string   `xml:"village-name"`
+	Location        Location `xml:"location"`
+	VillageId       string   `xml:"yandex-village-id"`
 }
 
 type Location struct {

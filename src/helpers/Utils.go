@@ -8,21 +8,31 @@ import (
 	"strconv"
 )
 
-func WriteCsvLocalities(localities map[string]int, pathToSave string) {
+func WriteCsvData(data map[string]int, pathToSave string, comma rune) error {
 	resultFile, err := os.Create(pathToSave)
 	CheckError("Cannot create file", err)
 
 	writer := csv.NewWriter(resultFile)
 
-	for _, localityData := range prepareLocalities(localities) {
-		err := writer.Write(localityData)
-		CheckError("Cannot write to file", err)
+	writer.Comma = comma
+	err = writer.WriteAll(prepareData(data))
+
+	if err != nil {
+		return err
 	}
+
 	writer.Flush()
-	resultFile.Close()
+
+	err = resultFile.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func prepareLocalities(localities map[string]int) [][]string {
+func prepareData(localities map[string]int) [][]string {
 	localitiesData := make([][]string, 0)
 
 	keys := make([]string, 0, len(localities))
