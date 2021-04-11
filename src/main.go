@@ -15,8 +15,8 @@ func main() {
 
 	var xmlFilePath, localitiesPathToSave string
 
-	flag.StringVar(&xmlFilePath, "i", "../data/example.xml", "Path to XML feed")
-	flag.StringVar(&localitiesPathToSave, "lo", "../data/result.csv", "Path for result about localities")
+	flag.StringVar(&xmlFilePath, "i", "", "[Required] Path to XML feed")
+	flag.StringVar(&localitiesPathToSave, "lo", "", "[Optional] Path for result about localities. If empty, localities will not be saved")
 
 	flag.Parse()
 
@@ -54,7 +54,9 @@ func main() {
 		}
 	}
 
-	helpers.WriteCsvLocalities(localities, localitiesPathToSave)
+	if localitiesPathToSave != "" {
+		helpers.WriteCsvLocalities(localities, localitiesPathToSave)
+	}
 
 	endTime := time.Now()
 
