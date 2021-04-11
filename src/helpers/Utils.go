@@ -8,8 +8,8 @@ import (
 	"strconv"
 )
 
-func WriteCsvLocalities(localities map[string]int) {
-	resultFile, err := os.Create("./data/result.csv")
+func WriteCsvLocalities(localities map[string]int, pathToSave string) {
+	resultFile, err := os.Create(pathToSave)
 	CheckError("Cannot create file", err)
 
 	writer := csv.NewWriter(resultFile)

@@ -4,6 +4,7 @@ import (
 	"app/helpers"
 	"app/types"
 	"encoding/xml"
+	"flag"
 	"fmt"
 	"os"
 	"time"
@@ -12,7 +13,14 @@ import (
 func main() {
 	startTime := time.Now()
 
-	file, err := os.Open("./data/example.xml")
+	var xmlFilePath, localitiesPathToSave string
+
+	flag.StringVar(&xmlFilePath, "i", "../data/example.xml", "Path to XML feed")
+	flag.StringVar(&localitiesPathToSave, "lo", "../data/result.csv", "Path for result about localities")
+
+	flag.Parse()
+
+	file, err := os.Open(xmlFilePath)
 	if err != nil {
 		helpers.CheckError("file not found", err)
 	}
@@ -46,7 +54,7 @@ func main() {
 		}
 	}
 
-	helpers.WriteCsvLocalities(localities)
+	helpers.WriteCsvLocalities(localities, localitiesPathToSave)
 
 	endTime := time.Now()
 
