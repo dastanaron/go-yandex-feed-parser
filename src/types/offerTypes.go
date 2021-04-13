@@ -12,6 +12,7 @@ type Offer struct {
 	VillageName     string   `xml:"village-name"`
 	Location        Location `xml:"location"`
 	VillageId       string   `xml:"yandex-village-id"`
+	Images          []string `xml:"image"`
 }
 
 type Location struct {

@@ -34,6 +34,8 @@ func main() {
 	villages := make(map[string]int)
 
 	offersCount := 0
+	imagesCount := 0
+
 	for {
 		tok, _ := decoder.Token()
 		if tok == nil {
@@ -45,6 +47,8 @@ func main() {
 			if tp.Name.Local == "offer" {
 				var offer types.Offer
 				decoder.DecodeElement(&offer, &tp)
+
+				imagesCount += len(offer.Images)
 
 				if offer.Location.LocalityName != "" {
 					if _, ok := localities[offer.Location.LocalityName]; !ok {
@@ -83,6 +87,7 @@ func main() {
 
 	fmt.Println("Offers count:", offersCount)
 	fmt.Println("Unique localities count", len(localities))
+	fmt.Println("All images count: ", imagesCount)
 
 	fmt.Println("Time:", endTime.Sub(startTime))
 }
