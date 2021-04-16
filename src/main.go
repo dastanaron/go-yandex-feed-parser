@@ -15,11 +15,12 @@ const DEFAULT_CSV_COMMA = ';'
 func main() {
 	startTime := time.Now()
 
-	var xmlFilePath, localitiesPathToSave, villagesPathToSave string
+	var xmlFilePath, localitiesPathToSave, villagesPathToSave, format string
 
 	flag.StringVar(&xmlFilePath, "i", "", "[Required] Path to XML feed")
 	flag.StringVar(&localitiesPathToSave, "lo", "", "[Optional] Path for result about localities. If empty, localities will not be saved")
 	flag.StringVar(&villagesPathToSave, "vo", "", "[Optional] Path for result about villages. If empty, villages will not be saved")
+	flag.StringVar(&format, "f", "csv", "[Optional] Format for saving file, default: csv")
 
 	flag.Parse()
 
@@ -70,14 +71,30 @@ func main() {
 	}
 
 	if localitiesPathToSave != "" {
-		err = helpers.WriteCsvData(localities, localitiesPathToSave, DEFAULT_CSV_COMMA)
+		switch format {
+		case "csv":
+			err = helpers.WriteCsvData(localities, localitiesPathToSave, DEFAULT_CSV_COMMA)
+		case "xlsx":
+			err = helpers.WriteXlsxData(localities, localitiesPathToSave)
+		default:
+			fmt.Println("Undefined format for saving")
+		}
+
 		if err != nil {
 			helpers.CheckError("Cannot write localities", err)
 		}
 	}
 
 	if villagesPathToSave != "" {
-		err = helpers.WriteCsvData(villages, villagesPathToSave, DEFAULT_CSV_COMMA)
+		switch format {
+		case "csv":
+			err = helpers.WriteCsvData(villages, villagesPathToSave, DEFAULT_CSV_COMMA)
+		case "xlsx":
+			err = helpers.WriteXlsxData(villages, villagesPathToSave)
+		default:
+			fmt.Println("Undefined format for saving")
+		}
+
 		if err != nil {
 			helpers.CheckError("Cannot write villages", err)
 		}
