@@ -9,7 +9,6 @@ type Offer struct {
 	Category        string   `xml:"category"`
 	Url             string   `xml:"url"`
 	CreationDate    string   `xml:"creation-date"`
-	VillageName     string   `xml:"village-name"`
 	Location        Location `xml:"location"`
 	VillageId       string   `xml:"yandex-village-id"`
 	Images          []string `xml:"image"`
@@ -26,6 +25,7 @@ type Location struct {
 	Distance        string  `xml:"distance"`
 	Latitude        float64 `xml:"latitude"`
 	Longitude       float64 `xml:"longitude"`
+	VillageName     string  `xml:"village-name"`
 	Metro           Metro   `xml:"metro"`
 	RailwayStation  string  `xml:"railway-station"`
 }

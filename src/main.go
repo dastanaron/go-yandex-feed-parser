@@ -57,11 +57,11 @@ func main() {
 					localities[offer.Location.LocalityName]++
 				}
 
-				if offer.VillageName != "" {
-					if _, ok := villages[offer.VillageName]; !ok {
-						villages[offer.VillageName] = 0
+				if offer.Location.VillageName != "" {
+					if _, ok := villages[offer.Location.VillageName]; !ok {
+						villages[offer.Location.VillageName] = 0
 					}
-					villages[offer.VillageName]++
+					villages[offer.Location.VillageName]++
 				}
 
 				offersCount++
@@ -87,6 +87,7 @@ func main() {
 
 	fmt.Println("Offers count:", offersCount)
 	fmt.Println("Unique localities count", len(localities))
+	fmt.Println("Unique villages count", len(villages))
 	fmt.Println("All images count: ", imagesCount)
 
 	fmt.Println("Time:", endTime.Sub(startTime))
