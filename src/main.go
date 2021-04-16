@@ -71,33 +71,11 @@ func main() {
 	}
 
 	if localitiesPathToSave != "" {
-		switch format {
-		case "csv":
-			err = helpers.WriteCsvData(localities, localitiesPathToSave, DEFAULT_CSV_COMMA)
-		case "xlsx":
-			err = helpers.WriteXlsxData(localities, localitiesPathToSave)
-		default:
-			fmt.Println("Undefined format for saving")
-		}
-
-		if err != nil {
-			helpers.CheckError("Cannot write localities", err)
-		}
+		saveData(localitiesPathToSave, format, localities)
 	}
 
 	if villagesPathToSave != "" {
-		switch format {
-		case "csv":
-			err = helpers.WriteCsvData(villages, villagesPathToSave, DEFAULT_CSV_COMMA)
-		case "xlsx":
-			err = helpers.WriteXlsxData(villages, villagesPathToSave)
-		default:
-			fmt.Println("Undefined format for saving")
-		}
-
-		if err != nil {
-			helpers.CheckError("Cannot write villages", err)
-		}
+		saveData(villagesPathToSave, format, villages)
 	}
 
 	endTime := time.Now()
@@ -108,4 +86,23 @@ func main() {
 	fmt.Println("All images count: ", imagesCount)
 
 	fmt.Println("Time:", endTime.Sub(startTime))
+}
+
+func saveData(pathToSave, format string, data map[string]int) {
+	var err error
+
+	preparedPath := fmt.Sprintf("%s.%s", pathToSave, format)
+
+	switch format {
+	case "csv":
+		err = helpers.WriteCsvData(data, preparedPath, DEFAULT_CSV_COMMA)
+	case "xlsx":
+		err = helpers.WriteXlsxData(data, preparedPath)
+	default:
+		fmt.Println("Undefined format for saving")
+	}
+
+	if err != nil {
+		helpers.CheckError("Cannot write data", err)
+	}
 }
