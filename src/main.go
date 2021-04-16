@@ -4,7 +4,6 @@ import (
 	"app/helpers"
 	"app/types"
 	"encoding/xml"
-	"flag"
 	"fmt"
 	"os"
 	"time"
@@ -15,16 +14,9 @@ const DEFAULT_CSV_COMMA = ';'
 func main() {
 	startTime := time.Now()
 
-	var xmlFilePath, localitiesPathToSave, villagesPathToSave, format string
+	appParameters := helpers.InitAppParams()
 
-	flag.StringVar(&xmlFilePath, "i", "", "[Required] Path to XML feed")
-	flag.StringVar(&localitiesPathToSave, "lo", "", "[Optional] Path for result about localities. If empty, localities will not be saved")
-	flag.StringVar(&villagesPathToSave, "vo", "", "[Optional] Path for result about villages. If empty, villages will not be saved")
-	flag.StringVar(&format, "f", "csv", "[Optional] Format for saving file, default: csv")
-
-	flag.Parse()
-
-	file, err := os.Open(xmlFilePath)
+	file, err := os.Open(appParameters.XmlFilePath)
 	if err != nil {
 		helpers.CheckError("file not found", err)
 	}
@@ -70,12 +62,12 @@ func main() {
 		}
 	}
 
-	if localitiesPathToSave != "" {
-		saveData(localitiesPathToSave, format, localities)
+	if appParameters.LocalitiesPathToSave != "" {
+		saveData(appParameters.LocalitiesPathToSave, appParameters.FormatFile, localities)
 	}
 
-	if villagesPathToSave != "" {
-		saveData(villagesPathToSave, format, villages)
+	if appParameters.VillagesPathToSave != "" {
+		saveData(appParameters.VillagesPathToSave, appParameters.FormatFile, villages)
 	}
 
 	endTime := time.Now()
@@ -99,6 +91,7 @@ func saveData(pathToSave, format string, data map[string]int) {
 	case "xlsx":
 		err = helpers.WriteXlsxData(data, preparedPath)
 	default:
+		fmt.Println("Format: ", format)
 		fmt.Println("Undefined format for saving")
 	}
 

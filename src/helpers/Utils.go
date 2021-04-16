@@ -1,14 +1,65 @@
 package helpers
 
 import (
+	"bufio"
 	"encoding/csv"
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 
 	xlsx "github.com/tealeg/xlsx/v3"
 )
+
+type AppParameters struct {
+	XmlFilePath          string
+	LocalitiesPathToSave string
+	VillagesPathToSave   string
+	FormatFile           string
+	IsInteractive        bool
+}
+
+func InitAppParams() AppParameters {
+	var xmlFilePath, localitiesPathToSave, villagesPathToSave, format string
+	var isInteractive bool
+
+	flag.StringVar(&xmlFilePath, "s", "", "[Required] Path to XML feed")
+	flag.BoolVar(&isInteractive, "i", false, "[Optional] Interactive mode")
+	flag.StringVar(&localitiesPathToSave, "lo", "", "[Optional] Path for result about localities. If empty, localities will not be saved")
+	flag.StringVar(&villagesPathToSave, "vo", "", "[Optional] Path for result about villages. If empty, villages will not be saved")
+	flag.StringVar(&format, "f", "csv", "[Optional] Format for saving file, default: csv")
+
+	flag.Parse()
+
+	if isInteractive {
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("Type file name for localities:")
+		localitiesPathToSave, _ = reader.ReadString('\n')
+		fmt.Println("Type file name for villages:")
+		villagesPathToSave, _ = reader.ReadString('\n')
+		fmt.Println("Type format for files [csv, xlsx (default)]:")
+		format, _ = reader.ReadString('\n')
+
+		localitiesPathToSave = strings.TrimSpace(localitiesPathToSave)
+		villagesPathToSave = strings.TrimSpace(villagesPathToSave)
+		format = strings.TrimSpace(format)
+
+		if format == "" {
+			format = "xlsx"
+		}
+	}
+
+	return AppParameters{
+		XmlFilePath:          xmlFilePath,
+		LocalitiesPathToSave: localitiesPathToSave,
+		VillagesPathToSave:   villagesPathToSave,
+		FormatFile:           format,
+		IsInteractive:        isInteractive,
+	}
+}
 
 func WriteXlsxData(data map[string]int, pathToSave string) error {
 	var file *xlsx.File
