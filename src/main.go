@@ -25,6 +25,7 @@ func main() {
 
 	localities := make(map[string]int)
 	villages := make(map[string]int)
+	categories := make(map[string]int)
 
 	offersCount := 0
 	imagesCount := 0
@@ -57,6 +58,13 @@ func main() {
 					villages[offer.Location.VillageName]++
 				}
 
+				if offer.Category != "" {
+					if _, ok := categories[offer.Category]; !ok {
+						categories[offer.Category] = 0
+					}
+					categories[offer.Category]++
+				}
+
 				offersCount++
 			}
 		}
@@ -70,11 +78,16 @@ func main() {
 		saveData(appParameters.VillagesPathToSave, appParameters.FormatFile, villages)
 	}
 
+	if appParameters.CategoriesPathToSave != "" {
+		saveData(appParameters.CategoriesPathToSave, appParameters.FormatFile, categories)
+	}
+
 	endTime := time.Now()
 
-	fmt.Println("Offers count:", offersCount)
-	fmt.Println("Unique localities count", len(localities))
-	fmt.Println("Unique villages count", len(villages))
+	fmt.Println("Offers count: ", offersCount)
+	fmt.Println("Unique localities count: ", len(localities))
+	fmt.Println("Unique villages count: ", len(villages))
+	fmt.Println("Unique object categories: ", len(categories))
 	fmt.Println("All images count: ", imagesCount)
 
 	fmt.Println("Time:", endTime.Sub(startTime))

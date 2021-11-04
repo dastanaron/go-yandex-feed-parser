@@ -18,18 +18,20 @@ type AppParameters struct {
 	XmlFilePath          string
 	LocalitiesPathToSave string
 	VillagesPathToSave   string
+	CategoriesPathToSave string
 	FormatFile           string
 	IsInteractive        bool
 }
 
 func InitAppParams() AppParameters {
-	var xmlFilePath, localitiesPathToSave, villagesPathToSave, format string
+	var xmlFilePath, localitiesPathToSave, villagesPathToSave, categoriesPathToSave, format string
 	var isInteractive bool
 
 	flag.StringVar(&xmlFilePath, "s", "", "[Required] Path to XML feed")
 	flag.BoolVar(&isInteractive, "i", false, "[Optional] Interactive mode")
 	flag.StringVar(&localitiesPathToSave, "lo", "", "[Optional] Path for result about localities. If empty, localities will not be saved")
 	flag.StringVar(&villagesPathToSave, "vo", "", "[Optional] Path for result about villages. If empty, villages will not be saved")
+	flag.StringVar(&categoriesPathToSave, "co", "", "[Optional] Path for result about categories. If empty, category will not be saved")
 	flag.StringVar(&format, "f", "csv", "[Optional] Format for saving file, default: csv")
 
 	flag.Parse()
@@ -56,6 +58,7 @@ func InitAppParams() AppParameters {
 		XmlFilePath:          xmlFilePath,
 		LocalitiesPathToSave: localitiesPathToSave,
 		VillagesPathToSave:   villagesPathToSave,
+		CategoriesPathToSave: categoriesPathToSave,
 		FormatFile:           format,
 		IsInteractive:        isInteractive,
 	}
